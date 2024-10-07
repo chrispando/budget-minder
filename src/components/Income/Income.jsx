@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 import "./Income.css";
 
-function Income({ setTotalIncome }) {
+function Income({ payPeriods, setTotalIncome }) {
   const [income, setIncome] = useState({
     salary: 0,
     dividends: 0,
     freelance: 0,
-    rental: 0,
+    pay_periods: 0,
     other: 0,
   });
 
@@ -17,7 +17,7 @@ function Income({ setTotalIncome }) {
       (acc, val) => acc + Number(val),
       0
     );
-    setTotalIncome(total);
+    setTotalIncome(total + payPeriods);
   }, [income, setTotalIncome]);
 
   const handleInputChange = (e) => {
@@ -63,13 +63,14 @@ function Income({ setTotalIncome }) {
           />
         </div>
         <div className="income-input">
-          <label>Rental Income:</label>
+          <label>Pay Periods:</label>
           <input
             type="number"
-            name="rental"
-            value={income.rental}
+            name="pay_periods"
+            value={payPeriods}
             onChange={handleInputChange}
             placeholder="$0.00"
+            disabled={true}
           />
         </div>
         <div className="income-input">

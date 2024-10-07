@@ -8,7 +8,9 @@ import Income from "./components/Income/Income";
 import Header from "./components/Header/Header";
 
 function App() {
+  const [payPeriods, setPayPeriods] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
+
   return (
     <Router>
       <div>
@@ -19,9 +21,16 @@ function App() {
           <Route path="/expenses" element={<Expenses />} />
           <Route
             path="/income"
-            element={<Income setTotalIncome={setTotalIncome} />}
+            element={
+              <Income payPeriods={payPeriods} setTotalIncome={setTotalIncome} />
+            }
           />
-          <Route path="/pay-periods" element={<PayPeriods />} />
+          <Route
+            path="/pay-periods"
+            element={
+              <PayPeriods payPeriodList={payPeriods} totalPay={setPayPeriods} />
+            }
+          />
         </Routes>
       </div>
     </Router>
