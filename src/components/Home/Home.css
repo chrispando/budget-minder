@@ -1,0 +1,37 @@
+/* src/components/Home.css */
+.home {
+  padding: 20px;
+}
+
+.totals {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.total-card {
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  margin: 0 10px;
+}
+
+.expenses-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.expense-card {
+  background-color: #e0e0e0;
+  padding: 15px;
+  border-radius: 8px;
+  width: calc(33% - 20px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.expense-card h4 {
+  margin-top: 0;
+}
