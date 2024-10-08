@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./components/Home/Home";
 import Expenses from "./components/Expenses/Expenses";
 import PayPeriods from "./components/PayPeriods/PayPeriods";
@@ -8,7 +8,7 @@ import Income from "./components/Income/Income";
 import Header from "./components/Header/Header";
 
 function App() {
-  const [payPeriods, setPayPeriods] = useState([]);
+  const [payPeriodList, setPayPeriodList] = useState([]);
   const [totalIncome, setTotalIncome] = useState(0);
 
   return (
@@ -22,13 +22,19 @@ function App() {
           <Route
             path="/income"
             element={
-              <Income payPeriods={payPeriods} setTotalIncome={setTotalIncome} />
+              <Income
+                payPeriods={payPeriodList}
+                setTotalIncome={setTotalIncome}
+              />
             }
           />
           <Route
             path="/pay-periods"
             element={
-              <PayPeriods payPeriodList={payPeriods} totalPay={setPayPeriods} />
+              <PayPeriods
+                payPeriodList={payPeriodList}
+                setPayPeriodList={setPayPeriodList} // Correctly pass setPayPeriodList
+              />
             }
           />
         </Routes>

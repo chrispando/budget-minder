@@ -5,8 +5,6 @@ import "./Income.css";
 function Income({ payPeriods, setTotalIncome }) {
   const [income, setIncome] = useState({
     salary: 0,
-    dividends: 0,
-    freelance: 0,
     pay_periods: 0,
     other: 0,
   });
@@ -42,26 +40,7 @@ function Income({ payPeriods, setTotalIncome }) {
             placeholder="$0.00"
           />
         </div>
-        <div className="income-input">
-          <label>Dividends:</label>
-          <input
-            type="number"
-            name="dividends"
-            value={income.dividends}
-            onChange={handleInputChange}
-            placeholder="$0.00"
-          />
-        </div>
-        <div className="income-input">
-          <label>Freelance:</label>
-          <input
-            type="number"
-            name="freelance"
-            value={income.freelance}
-            onChange={handleInputChange}
-            placeholder="$0.00"
-          />
-        </div>
+
         <div className="income-input">
           <label>Pay Periods:</label>
           <input
