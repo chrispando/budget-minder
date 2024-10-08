@@ -150,7 +150,20 @@ class Expenses extends Component {
                 value={expense.dueDate}
                 onChange={(e) => this.handleExpenseChange(index, e)}
               />
-
+              <label>Assign to Pay Period:</label>
+              <select
+                name="payPeriod"
+                value={expense.payPeriod || ""}
+                onChange={(e) => this.handleExpenseChange(index, e)}
+              >
+                <option value="">Select Pay Period</option>
+                {(this.props.payPeriods || []).map((period, i) => (
+                  <option key={i} value={i}>
+                    {new Date(period.startDate).toLocaleDateString()} -{" "}
+                    {new Date(period.endDate).toLocaleDateString()}
+                  </option>
+                ))}
+              </select>
               <label>Paid:</label>
               <input
                 type="checkbox"

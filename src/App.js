@@ -28,7 +28,13 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<Home income={totalIncome} expenses={expenses} />}
+            element={
+              <Home
+                income={totalIncome}
+                expenses={expenses}
+                payPeriods={payPeriodList}
+              />
+            }
           />
           <Route
             path="/expenses"

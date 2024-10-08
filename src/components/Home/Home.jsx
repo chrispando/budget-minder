@@ -4,6 +4,7 @@ import { Pie } from "react-chartjs-2"; // Import Pie chart from react-chartjs-2
 import "chart.js/auto"; // Import the chart.js library automatically
 import "./Home.css"; // Custom and slider CSS
 import ChartDataLabels from "chartjs-plugin-datalabels"; // Optional, if you want more customization
+import PayPeriods from "../PayPeriods/PayPeriods";
 
 class Home extends Component {
   constructor(props) {
@@ -11,6 +12,9 @@ class Home extends Component {
     // Initialize state
     this.state = {
       totals: { needs: 0, wants: 0, savings: 0 },
+      income: this.props.income,
+      expenses: this.props.expenses,
+      payPeriods: this.props.payPeriods,
     };
 
     // Bind methods
@@ -19,7 +23,7 @@ class Home extends Component {
 
   // Lifecycle method to calculate totals once the component mounts
   componentDidMount() {
-    console.log(this.props.expenses);
+    console.log(this.state);
     this.calculateTotals(this.props.expenses);
   }
 
@@ -78,8 +82,11 @@ class Home extends Component {
 
   render() {
     const main = this.props; // Receive expenses and income from props
-    const { totals } = this.state; // Get totals from state
-
+    const income = main.income;
+    const expenses = main.expenses;
+    const payPeriods = main.payPeriods;
+    const totals = this.state.totals; // Get totals from state
+    console.log(main);
     // Data for the Pie chart
     const pieData = {
       labels: ["Needs", "Wants", "Savings"],
@@ -117,7 +124,7 @@ class Home extends Component {
         <div className="income">
           <h2>
             Total Income: $
-            {Object.values(main.income)
+            {Object.values(income)
               .reduce((acc, val) => acc + Number(val), 0)
               .toFixed(2)}
           </h2>
@@ -139,7 +146,7 @@ class Home extends Component {
         {/* Slider for upcoming expenses */}
         <h3>Upcoming Expenses</h3>
         <Slider {...this.sliderSettings} className="expenses-slider">
-          {main.expenses.map((expense, index) => (
+          {expenses.map((expense, index) => (
             <div key={index} className="expense-card">
               <h4>{expense.name}</h4>
               <p>Amount: ${expense.amount}</p>
@@ -148,6 +155,47 @@ class Home extends Component {
             </div>
           ))}
         </Slider>
+        {/* Slider for upcoming pay periods */}
+        <h3>Upcoming Pay Periods</h3>
+        <Slider {...this.sliderSettings} className="pay-periods-slider">
+          {payPeriods.map((period, index) => (
+            <div key={index} className="pay-period-card">
+              <h4>
+                Pay Period: {new Date(period.startDate).toLocaleDateString()} -{" "}
+                {new Date(period.endDate).toLocaleDateString()}
+              </h4>
+              <p>Rate of Pay: ${period.rateOfPay}</p>
+              <p>Hours Invoiced: {period.hoursInvoiced}</p>
+              <p>Total Pay: ${period.totalPay}</p>
+            </div>
+          ))}
+        </Slider>
+
+        <h3>Expenses by Pay Period</h3>
+        {payPeriods.map((period, i) => {
+          const expensesForPeriod = main.expenses.filter(
+            (exp) => exp.payPeriod === i
+          );
+          return (
+            <div key={i}>
+              <h4>
+                Pay Period: {new Date(period.startDate).toLocaleDateString()} -{" "}
+                {new Date(period.endDate).toLocaleDateString()}
+              </h4>
+              {expensesForPeriod.length > 0 ? (
+                <ul>
+                  {expensesForPeriod.map((expense, idx) => (
+                    <li key={idx}>
+                      {expense.name}: ${expense.amount}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No expenses assigned.</p>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   }
