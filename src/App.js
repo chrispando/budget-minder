@@ -38,7 +38,13 @@ function App() {
           />
           <Route
             path="/expenses"
-            element={<Expenses expenses={expenses} setExpenses={setExpenses} />}
+            element={
+              <Expenses
+                expenses={expenses}
+                setExpenses={setExpenses}
+                payPeriods={payPeriodList}
+              />
+            }
           />
           <Route
             path="/income"

@@ -6,12 +6,15 @@ class Expenses extends Component {
     super(props);
     this.state = {
       expenses: this.props.expenses,
+      payPeriods: this.props.payPeriods,
       error: null, // To store error messages for invalid inputs
     };
 
     this.handleExpenseChange = this.handleExpenseChange.bind(this);
     this.addExpense = this.addExpense.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    console.log(this.state);
   }
 
   // Handle changes in expense input fields
@@ -61,6 +64,7 @@ class Expenses extends Component {
           amount: 0,
           category: "",
           dueDate: "",
+          payPeriod: "",
           paid: false, // Add "paid" status for new expenses
         },
       ],
@@ -158,7 +162,7 @@ class Expenses extends Component {
               >
                 <option value="">Select Pay Period</option>
                 {(this.props.payPeriods || []).map((period, i) => (
-                  <option key={i} value={i}>
+                  <option key={i} value={Number(i)}>
                     {new Date(period.startDate).toLocaleDateString()} -{" "}
                     {new Date(period.endDate).toLocaleDateString()}
                   </option>

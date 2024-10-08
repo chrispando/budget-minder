@@ -1,0 +1,24 @@
+.droppable-expenses-list,
+.droppable-pay-period {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  min-height: 150px;
+}
+
+.draggable-expense {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  cursor: grab;
+  text-align: center;
+}
+
+.droppable-pay-period h4 {
+  margin-bottom: 15px;
+}
