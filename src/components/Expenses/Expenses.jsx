@@ -1,31 +1,27 @@
+// src/components/Expenses.jsx
 import React, { Component } from "react";
-import data from "../../assets/data/expenses.json";
+import Expense from "../Expense/Expense";
+import "./Expenses.css"; // Custom CSS
 
 class Expenses extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: this.props.expenses,
-      payPeriods: this.props.payPeriods,
+      expenses: this.props.expenses || [], // Initialize with props or an empty array
       error: null, // To store error messages for invalid inputs
     };
 
     this.handleExpenseChange = this.handleExpenseChange.bind(this);
     this.addExpense = this.addExpense.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
-    console.log(this.state);
   }
 
   // Handle changes in expense input fields
   handleExpenseChange(index, event) {
-    const { name, value, type, checked } = event.target;
+    const { name, value } = event.target;
     const newExpenses = this.state.expenses.map((expense, i) => {
       if (i === index) {
-        return {
-          ...expense,
-          [name]: type === "checkbox" ? checked : value, // Handle checkbox for "paid" status
-        };
+        return { ...expense, [name]: value }; // Update the specific expense by index
       }
       return expense;
     });
@@ -64,12 +60,9 @@ class Expenses extends Component {
           amount: 0,
           category: "",
           dueDate: "",
-          payPeriod: "",
-          paid: false, // Add "paid" status for new expenses
         },
       ],
     });
-    console.log("New expense added:", this.state.expenses);
   }
 
   // Handle form submission
@@ -77,7 +70,6 @@ class Expenses extends Component {
     e.preventDefault();
 
     const expenses = this.state.expenses;
-    console.log("Expenses submitted:", expenses);
     // Filter out valid expenses and prevent submission of duplicates or empty fields
     const newExpenses = expenses.filter((newExpense) => {
       return (
@@ -96,10 +88,6 @@ class Expenses extends Component {
       // Add valid expenses to the parent state
       this.props.setExpenses([...this.props.expenses, ...newExpenses]);
       this.setState({ error: null });
-      console.log("Expenses submitted:", [
-        ...this.props.expenses,
-        ...newExpenses,
-      ]);
     } else {
       this.setState({ error: "No new expenses to add or invalid data." });
     }
@@ -113,69 +101,12 @@ class Expenses extends Component {
         <h2>Manage Your Expenses</h2>
         <form onSubmit={this.handleSubmit} className="expenses-form">
           {expenses.map((expense, index) => (
-            <div key={index} className="expense-row">
-              <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Expense Name"
-                value={expense.name}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-                required
-              />
-
-              <label>Amount:</label>
-              <input
-                type="number"
-                name="amount"
-                placeholder="Amount"
-                value={expense.amount}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-                required
-              />
-
-              <label>Category:</label>
-              <select
-                name="category"
-                value={expense.category}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-                required
-              >
-                <option value="">Select Category</option>
-                <option value="Needs">Needs</option>
-                <option value="Wants">Wants</option>
-                <option value="Savings">Savings</option>
-              </select>
-
-              <label>Due Date:</label>
-              <input
-                type="date"
-                name="dueDate"
-                value={expense.dueDate}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-              />
-              <label>Assign to Pay Period:</label>
-              <select
-                name="payPeriod"
-                value={expense.payPeriod || ""}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-              >
-                <option value="">Select Pay Period</option>
-                {(this.props.payPeriods || []).map((period, i) => (
-                  <option key={i} value={Number(i)}>
-                    {new Date(period.startDate).toLocaleDateString()} -{" "}
-                    {new Date(period.endDate).toLocaleDateString()}
-                  </option>
-                ))}
-              </select>
-              <label>Paid:</label>
-              <input
-                type="checkbox"
-                name="paid"
-                checked={expense.paid}
-                onChange={(e) => this.handleExpenseChange(index, e)}
-              />
-            </div>
+            <Expense
+              key={index}
+              expense={expense}
+              index={index}
+              handleExpenseChange={this.handleExpenseChange} // Pass down handler
+            />
           ))}
 
           <button
