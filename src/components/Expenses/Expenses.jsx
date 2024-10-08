@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import data from "../../assets/data/expenses.json";
+
 class Expenses extends Component {
   constructor(props) {
     super(props);
@@ -15,10 +16,13 @@ class Expenses extends Component {
 
   // Handle changes in expense input fields
   handleExpenseChange(index, event) {
-    const { name, value } = event.target;
+    const { name, value, type, checked } = event.target;
     const newExpenses = this.state.expenses.map((expense, i) => {
       if (i === index) {
-        return { ...expense, [name]: value }; // Update the specific expense by index
+        return {
+          ...expense,
+          [name]: type === "checkbox" ? checked : value, // Handle checkbox for "paid" status
+        };
       }
       return expense;
     });
@@ -57,6 +61,7 @@ class Expenses extends Component {
           amount: 0,
           category: "",
           dueDate: "",
+          paid: false, // Add "paid" status for new expenses
         },
       ],
     });
@@ -100,12 +105,12 @@ class Expenses extends Component {
     const { expenses, error } = this.state;
 
     return (
-      <div>
-        <h2>Expenses</h2>
-        <form onSubmit={this.handleSubmit}>
-          <h3>Expenses</h3>
+      <div className="expenses-container">
+        <h2>Manage Your Expenses</h2>
+        <form onSubmit={this.handleSubmit} className="expenses-form">
           {expenses.map((expense, index) => (
-            <div key={index}>
+            <div key={index} className="expense-row">
+              <label>Name:</label>
               <input
                 type="text"
                 name="name"
@@ -114,6 +119,8 @@ class Expenses extends Component {
                 onChange={(e) => this.handleExpenseChange(index, e)}
                 required
               />
+
+              <label>Amount:</label>
               <input
                 type="number"
                 name="amount"
@@ -122,30 +129,53 @@ class Expenses extends Component {
                 onChange={(e) => this.handleExpenseChange(index, e)}
                 required
               />
-              <input
-                type="text"
+
+              <label>Category:</label>
+              <select
                 name="category"
-                placeholder="Category"
                 value={expense.category}
                 onChange={(e) => this.handleExpenseChange(index, e)}
-              />
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="Needs">Needs</option>
+                <option value="Wants">Wants</option>
+                <option value="Savings">Savings</option>
+              </select>
+
+              <label>Due Date:</label>
               <input
                 type="date"
                 name="dueDate"
                 value={expense.dueDate}
                 onChange={(e) => this.handleExpenseChange(index, e)}
               />
+
+              <label>Paid:</label>
+              <input
+                type="checkbox"
+                name="paid"
+                checked={expense.paid}
+                onChange={(e) => this.handleExpenseChange(index, e)}
+              />
             </div>
           ))}
-          <button type="button" onClick={this.addExpense}>
+
+          <button
+            type="button"
+            onClick={this.addExpense}
+            className="add-expense-button"
+          >
             Add Another Expense
           </button>
-          <br />
-          <button type="submit">Submit</button>
+
+          <button type="submit" className="submit-button">
+            Submit
+          </button>
         </form>
 
         {/* Show validation error if any */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && <p className="error-message">{error}</p>}
       </div>
     );
   }

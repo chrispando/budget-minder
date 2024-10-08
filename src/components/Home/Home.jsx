@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import Slider from "react-slick"; // Import react-slick slider
+import { Pie } from "react-chartjs-2"; // Import Pie chart from react-chartjs-2
+import "chart.js/auto"; // Import the chart.js library automatically
 import "./Home.css"; // Custom and slider CSS
+import ChartDataLabels from "chartjs-plugin-datalabels"; // Optional, if you want more customization
 
 class Home extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     // Initialize state
     this.state = {
       totals: { needs: 0, wants: 0, savings: 0 },
@@ -17,6 +19,7 @@ class Home extends Component {
 
   // Lifecycle method to calculate totals once the component mounts
   componentDidMount() {
+    console.log(this.props.expenses);
     this.calculateTotals(this.props.expenses);
   }
 
@@ -29,13 +32,13 @@ class Home extends Component {
     expenses.forEach((expense) => {
       switch (expense.category) {
         case "Needs":
-          needs += expense.amount;
+          needs += Number(expense.amount);
           break;
         case "Wants":
-          wants += expense.amount;
+          wants += Number(expense.amount);
           break;
         case "Savings":
-          savings += expense.amount;
+          savings += Number(expense.amount);
           break;
         default:
           break;
@@ -77,6 +80,33 @@ class Home extends Component {
     const main = this.props; // Receive expenses and income from props
     const { totals } = this.state; // Get totals from state
 
+    // Data for the Pie chart
+    const pieData = {
+      labels: ["Needs", "Wants", "Savings"],
+      datasets: [
+        {
+          label: "Expense Distribution",
+          labels: ["Needs", "Wants", "Savings"],
+          data: [totals.needs, totals.wants, totals.savings], // Data for the chart
+          backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"], // Colors for the segments
+          hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        },
+      ],
+    };
+    // Pie chart options to display text and percentages inside
+    const pieOptions = {
+      plugins: {
+        datalabels: {
+          color: "#fff", // Text color inside the chart
+          formatter: (value, context) => {
+            const total = context.chart._metasets[context.datasetIndex].total;
+            const percentage = ((value / total) * 100).toFixed(2) + "%"; // Calculate percentage
+            return percentage;
+          },
+        },
+      },
+    };
+
     return (
       <div className="home">
         <h1>Welcome to the Budget App!</h1>
@@ -92,19 +122,17 @@ class Home extends Component {
               .toFixed(2)}
           </h2>
         </div>
-        {/* Display Needs, Wants, Savings */}
+        {/* Display Needs, Wants, Savings as a Pie Chart */}
         <div className="totals">
-          <div className="total-card">
-            <h2>Needs</h2>
-            <p>${totals.needs}</p>
-          </div>
-          <div className="total-card">
-            <h2>Wants</h2>
-            <p>${totals.wants}</p>
-          </div>
-          <div className="total-card">
-            <h2>Savings</h2>
-            <p>${totals.savings}</p>
+          <div className="pie-chart-container">
+            <h3>Expense Breakdown</h3>
+            <div className="pie-chart-wrapper">
+              <Pie
+                data={pieData}
+                options={pieOptions}
+                plugins={[ChartDataLabels]}
+              />
+            </div>
           </div>
         </div>
 
