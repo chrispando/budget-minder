@@ -7,22 +7,13 @@ class PayPeriods extends Component {
 
     // Initialize state with pay periods and total pay
     this.state = {
-      // payPeriods: [
-      //   {
-      //     startDate: "",
-      //     endDate: "",
-      //     rateOfPay: 0,
-      //     hoursInvoiced: 0,
-      //     totalPay: 0,
-      //   },
-
-      // ],
       payPeriods: this.props.payPeriodList,
     };
 
     // Bind methods
     this.handlePayPeriodChange = this.handlePayPeriodChange.bind(this);
     this.addPayPeriod = this.addPayPeriod.bind(this);
+    this.deletePayPeriod = this.deletePayPeriod.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -54,6 +45,19 @@ class PayPeriods extends Component {
       ],
     });
   }
+  // Method to delete the most recent pay period
+  deletePayPeriod() {
+    // Ensure there are pay periods to delete
+    if (this.state.payPeriods.length > 0) {
+      const updatedPayPeriods = this.state.payPeriods.slice(0, -1); // Remove the last item
+      this.setState(
+        {
+          payPeriods: updatedPayPeriods, // Update state with the new array
+        },
+        this.props.setPayPeriodList(updatedPayPeriods) // Update parent state with the new array
+      );
+    }
+  }
 
   // Method to handle form submission
   handleSubmit(e) {
@@ -62,7 +66,6 @@ class PayPeriods extends Component {
     // Step 1: Calculate the total pay for each pay period
     const calculatedPeriods = this.state.payPeriods.map((period) => {
       const totalPay = period.rateOfPay * period.hoursInvoiced;
-
       return { ...period, totalPay };
     });
 
@@ -143,6 +146,13 @@ class PayPeriods extends Component {
           ))}
           <button type="button" onClick={this.addPayPeriod}>
             Add Another Pay Period
+          </button>
+          <button
+            type="button"
+            style={{ backgroundColor: "red" }}
+            onClick={this.deletePayPeriod}
+          >
+            Delete Pay Period
           </button>
           <br />
           <button type="submit">Submit</button>

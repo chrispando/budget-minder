@@ -9,7 +9,16 @@ import Header from "./components/Header/Header";
 
 function App() {
   const [payPeriodList, setPayPeriodList] = useState([]);
-  const [totalIncome, setTotalIncome] = useState(0);
+  const [expenses, setExpenses] = useState([]);
+  const [totalIncome, setTotalIncome] = useState({
+    salary: 0,
+    pay_periods: 0,
+    other: 0,
+  });
+  // Function to update income in the App-level state
+  const updateIncome = (newIncome) => {
+    setTotalIncome(newIncome);
+  };
 
   return (
     <Router>
@@ -17,14 +26,21 @@ function App() {
         {/* Include Header at the top */}
         <Header />
         <Routes>
-          <Route path="/" element={<Home income={totalIncome} />} />
-          <Route path="/expenses" element={<Expenses />} />
+          <Route
+            path="/"
+            element={<Home income={totalIncome} expenses={expenses} />}
+          />
+          <Route
+            path="/expenses"
+            element={<Expenses expenses={expenses} setExpenses={setExpenses} />}
+          />
           <Route
             path="/income"
             element={
               <Income
                 payPeriods={payPeriodList}
-                setTotalIncome={setTotalIncome}
+                totalIncome={totalIncome}
+                setTotalIncome={updateIncome}
               />
             }
           />
