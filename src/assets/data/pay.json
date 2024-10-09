@@ -1,0 +1,30 @@
+[
+  {
+    "startDate": "2024-10-01",
+    "endDate": "2024-10-15",
+    "rateOfPay": 50,
+    "hoursInvoiced": 80,
+    "totalPay": 4000
+  },
+  {
+    "startDate": "2024-10-16",
+    "endDate": "2024-10-31",
+    "rateOfPay": 55,
+    "hoursInvoiced": 75,
+    "totalPay": 4125
+  },
+  {
+    "startDate": "2024-11-01",
+    "endDate": "2024-11-15",
+    "rateOfPay": 60,
+    "hoursInvoiced": 70,
+    "totalPay": 4200
+  },
+  {
+    "startDate": "2024-11-16",
+    "endDate": "2024-11-30",
+    "rateOfPay": 58,
+    "hoursInvoiced": 72,
+    "totalPay": 4176
+  }
+]

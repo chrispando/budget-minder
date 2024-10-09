@@ -3,6 +3,9 @@ import Slider from "react-slick";
 import "./Home.css"; // Custom and slider CSS
 import PieChart from "../PieChart/PieChart";
 import Match from "../Match/Match";
+import GanttChart from "../GanttChart/Gantt";
+import myExpenses from "../../assets/data/expenses.json";
+import myPay from "../../assets/data/pay.json";
 
 class Home extends Component {
   constructor(props) {
@@ -10,14 +13,35 @@ class Home extends Component {
     this.state = {
       totals: { needs: 0, wants: 0, savings: 0 },
       income: this.props.income,
-      expenses: this.props.expenses,
-      payPeriods: this.props.payPeriods,
+      expenses:
+        this.props.expenses.length === 0 ? myExpenses : this.props.expenses,
+      payPeriods:
+        this.props.payPeriods.length === 0 ? myPay : this.props.payPeriods,
+      expensesByPayPeriod: {}, // Start with an empty object for expenses by pay period
     };
+    console.log("Home constructor", this.state);
   }
 
   // Lifecycle method to calculate totals once the component mounts
   componentDidMount() {
     this.calculateTotals(this.props.expenses);
+
+    const savedExpensesByPayPeriod = JSON.parse(
+      localStorage.getItem("expensesByPayPeriod")
+    );
+    if (savedExpensesByPayPeriod) {
+      this.setState({ expensesByPayPeriod: savedExpensesByPayPeriod });
+    }
+  }
+
+  // Lifecycle method to update the local storage when the expensesByPayPeriod state changes
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.expensesByPayPeriod !== this.state.expensesByPayPeriod) {
+      localStorage.setItem(
+        "expensesByPayPeriod",
+        JSON.stringify(this.state.expensesByPayPeriod)
+      );
+    }
   }
 
   calculateTotals(expenses) {
@@ -44,11 +68,13 @@ class Home extends Component {
     this.setState({ totals: { needs, wants, savings } });
   }
 
+  // Method to format the data for the Gantt chart
+
   render() {
     const expenses = this.state.expenses;
     const payPeriods = this.state.payPeriods;
     const totals = this.state.totals;
-
+    console.log("Pay Periods", payPeriods);
     // Data for the Pie chart
     const pieData = {
       labels: ["Needs", "Wants", "Savings"],

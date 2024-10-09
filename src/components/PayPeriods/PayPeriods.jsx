@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./PayPeriods.css";
+import pay from "../../assets/data/pay.json";
 
 class PayPeriods extends Component {
   constructor(props) {
@@ -7,7 +8,7 @@ class PayPeriods extends Component {
 
     // Initialize state with pay periods and total pay
     this.state = {
-      payPeriods: this.props.payPeriodList,
+      payPeriods: this.props.payPeriodList.length === 0 ? pay : [],
     };
 
     // Bind methods
@@ -15,6 +16,7 @@ class PayPeriods extends Component {
     this.addPayPeriod = this.addPayPeriod.bind(this);
     this.deletePayPeriod = this.deletePayPeriod.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    console.log("Payperiods constuctor", this.state.payPeriods);
   }
 
   // Method to handle changes in pay period inputs

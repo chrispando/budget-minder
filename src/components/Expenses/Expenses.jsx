@@ -2,12 +2,13 @@
 import React, { Component } from "react";
 import Expense from "../Expense/Expense";
 import "./Expenses.css"; // Custom CSS
+import data from "../../assets/data/expenses.json"; // Import sample data
 
 class Expenses extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: this.props.expenses || [], // Initialize with props or an empty array
+      expenses: this.props.expenses.length === 0 ? data : [], // Initialize with props or an empty array
       error: null, // To store error messages for invalid inputs
     };
 

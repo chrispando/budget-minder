@@ -1,15 +1,37 @@
 import React, { Component } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd"; // Import for drag-and-drop
 import "./Match.css"; // Custom CSS
+import expenses from "../../assets/data/expenses.json"; // Import sample data
+import pay from "../../assets/data/pay.json"; // Import sample data
+import DroppableList from "../DroppableList/DroppableList";
+import DroppablePayPeriod from "../DroppablePayPeriod/DroppablePayPeriod";
+import GanttChart from "../GanttChart/Gantt";
 
 class Match extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      expenses: this.props.expenses,
-      payPeriods: this.props.payPeriods,
+      expenses:
+        this.props.expenses.length === 0 ? expenses : this.props.expenses,
+      payPeriods:
+        this.props.payPeriods.length === 0 ? pay : this.props.payPeriods,
+      expensesByPayPeriod: {
+        // key = payPeriod id, value = array of assigned expenses
+        1: [],
+        2: [],
+      }, // Start with an empty object for expenses by pay
     };
     this.onDragEnd = this.onDragEnd.bind(this);
+    // Bind the method if needed
+    this.formatDataForChart = this.formatDataForChart.bind(this);
+  }
+  componentDidMount() {
+    const savedExpensesByPayPeriod = JSON.parse(
+      localStorage.getItem("expensesByPayPeriod")
+    );
+    if (savedExpensesByPayPeriod) {
+      this.setState({ expensesByPayPeriod: savedExpensesByPayPeriod });
+    }
   }
 
   // Handle the Drag End event
@@ -58,12 +80,50 @@ class Match extends Component {
       });
     }
   }
+  // Method to format the data for the Gantt chart
+  formatDataForChart = () => {
+    const { payPeriods = [], expensesByPayPeriod = {} } = this.state; // Ensure both arrays are initialized
+
+    return payPeriods
+      .map((period) => {
+        if (!period || !period.startDate || !period.endDate) {
+          console.warn("Invalid pay period:", period);
+          return null; // Safely return null if the payPeriod is invalid
+        }
+
+        // Safely access the expenses for the current pay period
+        const periodExpenses = expensesByPayPeriod[period.id] || [];
+
+        // Reduce to calculate the total amounts for each expense category
+        const expenseTotals = periodExpenses.reduce((totals, expense) => {
+          if (expense && expense.name && expense.amount) {
+            totals[expense.name] = expense.amount;
+          } else {
+            console.warn("Invalid expense:", expense);
+          }
+          return totals;
+        }, {});
+
+        // Return the formatted object
+        return {
+          payPeriod: `${new Date(
+            period.startDate
+          ).toLocaleDateString()} to ${new Date(
+            period.endDate
+          ).toLocaleDateString()}`,
+          ...expenseTotals,
+        };
+      })
+      .filter((period) => period !== null); // Filter out any null periods
+  };
 
   render() {
     const { expenses, payPeriods } = this.state;
-
+    const chartData = this.formatDataForChart();
     return (
       <div>
+        <GanttChart data={chartData} />
+
         <DragDropContext onDragEnd={this.onDragEnd}>
           <div className="drag-drop-container">
             {/* Expenses List (Draggable) */}

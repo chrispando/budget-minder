@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Rent",
+    "amount": 1200,
+    "category": "Needs",
+    "dueDate": "2024-10-15"
+  },
+  {
+    "name": "Gym Membership",
+    "amount": 50,
+    "category": "Wants",
+    "dueDate": "2024-10-20"
+  },
+  {
+    "name": "Groceries",
+    "amount": 300,
+    "category": "Needs",
+    "dueDate": "2024-10-12"
+  },
+  {
+    "name": "Vacation Fund",
+    "amount": 200,
+    "category": "Savings",
+    "dueDate": "2024-10-30"
+  }
+]

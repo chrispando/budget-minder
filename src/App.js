@@ -6,6 +6,7 @@ import Expenses from "./components/Expenses/Expenses";
 import PayPeriods from "./components/PayPeriods/PayPeriods";
 import Income from "./components/Income/Income";
 import Header from "./components/Header/Header";
+import "./App.css";
 
 function App() {
   const [payPeriodList, setPayPeriodList] = useState([]);
